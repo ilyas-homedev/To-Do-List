@@ -1,5 +1,11 @@
 @import url('./fonts.css');
 
+:root {
+    --main-color: #242424;
+    --action-color: #3AADA8;
+    --folders: #A2D5AC;
+}
+
 * {
     font-family: Roboto;
 }
@@ -9,10 +15,207 @@ body {
     margin: 0;
     max-width: 1200px;
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-areas: 
+        "header header"
+        "sidebar content"
+    ;
 }
 
 header {
+    grid-area: header;
     width: 100%;
-    border: 1px solid black;
+    display: flex;
+    justify-content: right;
+    background-color: #E5EEC1;
+}
 
+.btn {
+    font-size: 20px;
+    padding: 10px;
+    cursor: pointer;
+    margin: 10px 20px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    color: var(--main-color);
+}
+
+.btn:hover {
+    background-color: #fff;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    border-right: 2px solid #ccc;
+    height: 100vh;
+}
+
+.content {
+    grid-area: content;
+    height: 100vh;
+    overflow: scroll;
+}
+
+/* Create folder */
+.create-folder-container {
+    width: 100%;
+    padding: 0 20px 20px 20px;
+    box-sizing: border-box;
+    color: var(--main-color);
+}
+
+.input-btn-field {
+    display: flex;
+    align-items: center;
+}
+
+.create-folder-input {
+    width: 200px;
+    font-size: 24px;
+    outline: none;
+    padding: 5px;
+    border: 2px solid var(--action-color);
+    border-radius: 5px;
+}
+
+.create-folder-input::placeholder {
+    opacity: .4;
+}
+
+.create-folder-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+    margin: 0 10px;
+    box-sizing: border-box;
+    color: var(--action-color);
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.create-folder-btn i {
+    pointer-events: none;
+}
+
+.create-folder-btn:hover {
+    background-color: var(--folders);
+    border-color: var(--action-color);
+}
+
+.invalid-name-prompt {
+    font-size: 20px;
+    display: none;
+    margin: 0;
+}
+
+
+/* Sidebar and Folders */
+.sidebar h2 {
+    text-align: center;
+    border-bottom: 2px solid #ccc;
+    margin: 0;
+    padding: 20px;
+}
+
+.list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.folder {
+    font-size: 24px;
+    margin: 5px 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.folder i {
+    pointer-events: none;
+}
+
+.folder:hover {
+    border-radius: 5px;
+    background-color: var(--folders);
+}
+
+
+/* tasks */
+.task {
+    width: 97%;
+    margin: 5px 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.task:first-child {
+    margin-bottom: 20px;
+}
+
+.task-description {
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    width: 550px;
+}
+
+.task-date, .task-time, .save-task-btn, .delete-task-btn {
+    cursor: pointer;
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 0;
+}
+
+.task-description, .task-date, .task-time, .save-task-btn, .delete-task-btn {
+    height: 30px;
+    font-size: 16px;
+    box-sizing: border-box;
+    padding: 3px;
+}
+
+.save-task-btn, .delete-task-btn {
+    width: 30px;
+    margin-left: 10px;
+}
+
+.save-task-btn i, .delete-task-btn i {
+    pointer-events: none;
+}
+
+.save-task-btn {
+    border-color: var(--action-color);
+}
+
+.save-task-btn:hover {
+    color: #557C83;
+}
+
+.delete-task-btn {
+    border-color: #8A0000;
+}
+
+.delete-task-btn:hover {
+    color: #557C83;
+}
+
+.task-date {
+    width: 155px;
+}
+
+.task-date, .task-time {
+    border-left: none;
+}
+
+.folder-title {
+    margin: 20px 10px;
+    color: var(--main-color);
+    font-size: 40px;
+}
+
+.list-container {
+    border-top: 2px solid #ccc;
 }

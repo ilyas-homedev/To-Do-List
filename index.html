@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" rel="stylesheet"/>
     <link rel="stylesheet" href="./styles/styles.css">
     <title>To Do List</title>
 </head>
 <body>
     <header class="header">
-        <button class="btn">Create new list</button>
-        <button class="btn">Show all tasks</button>
+        <button data-type="createListBtn" class="btn">Create new list</button>
+        <button data-type="showListBtn" class="btn">Show all tasks</button>
     </header>
 
-    <script src="src/index.js"></script>
+    <div class="sidebar">
+        <h2>Folders</h2>
+        <ul data-type="list" class="list"></ul>
+    </div>
+
+    <div data-type="content" class="content">
+        <div data-type="empty-container"></div>
+        <div class="list-container">
+            <h1 data-type="folderTitle" class="folder-title"></h1>
+            <ul data-type="task-list" class="list">
+                
+            </ul>
+        </div>
+    </div>
+
+    <script type="module" src="./src/index.js"></script>
 </body>
 </html>
