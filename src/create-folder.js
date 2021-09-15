@@ -27,3 +27,15 @@ export function nameValidation(name) {
         return false;
     }
 }
+
+export function renderFoldersList(taskFolders, folderNameInput) {
+    const list = document.querySelector('[data-type="list"]');
+    const foldersArray = Object.keys(taskFolders);
+    const array = foldersArray.map(name => {
+        return `
+            <li data-type="folder" class="folder"><i class="far fa-folder"></i> ${name}</li>
+        `;
+    })
+    folderNameInput.value = '';
+    return list.innerHTML = array.join("");
+}
