@@ -1,43 +1,25 @@
-export function addEmptyInputField(folderArray, folderName) {
-    const randomNumber = Math.floor(Math.random() * 10000);
-    const id = `${folderName}_task_${randomNumber}`;
-    
-    const emptyField = {
-        id: id,
-        description: '',
-        date: '',
-        time: '',
-    }
+export function addEmptyInputField(folderName) {
+    const defaultTaskContainer = document.querySelector('[data-type="default-task-container"]');
+    defaultTaskContainer.classList.add("open-default-task-container");
 
-    folderArray[`${folderName}`].push(emptyField);
-    renderTasksList(folderArray, folderName);
+    const title = document.querySelector('[data-type="folderTitle"]');
+    title.textContent = folderName;
+
+    const prompt = document.querySelector('.task-fill-prompt');
+    prompt.style.display = "block";
 }
 
 export function renderTasksList(folderTasksList, folderName) {
     const tasks = folderTasksList[`${folderName}`].map(task => {
-        if (task.description.length === 0) {
-            return `
-                <li id="${task.id}" data-type="task" class="task">
-                    <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
-                    <input type="text" placeholder="Task" class="task-description" value="${task.description}">
-                    <input type="date" class="task-date" value="${task.date}">
-                    <input type="time" class="task-time" value="${task.time}">
-                    <button data-type="save" class="save-task-btn"><i class="fas fa-save"></i></button>
-                    <button data-type="delete" class="delete-task-btn"><i class="far fa-trash-alt"></i></button>
-                </li>
-            `;
-        } else {
-            return `
-                <li id="${task.id}" data-type="task" class="task">
-                    <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
-                    <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
-                    <input type="date" class="task-date saved-task" value="${task.date}" disabled>
-                    <input type="time" class="task-time saved-task" value="${task.time}" disabled>
-                    
-                    <button data-type="delete" class="delete-task-btn"><i class="far fa-trash-alt"></i></button>
-                </li>
-            `;
-        }
+        return `
+            <li id="${task.id}" data-type="task" class="task">
+                <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
+                <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
+                <input type="date" class="task-date saved-task" value="${task.date}" disabled>
+                <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
+                <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
+            </li>
+        `;
     })
 
     const title = document.querySelector('[data-type="folderTitle"]');
@@ -62,7 +44,7 @@ export function saveTask(folderTasksList, folderName, li) {
         time: time.value,
     }
 
-    folderTasksList[`${folderName}`].splice(1, 0, newTask);
+    folderTasksList[`${folderName}`].unshift(newTask);
     console.log(folderTasksList);
 
     renderTasksList(folderTasksList, folderName);

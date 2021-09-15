@@ -151,11 +151,21 @@ header {
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
-.task:first-child {
-    margin-bottom: 20px;
+.default-task-container {
+    display: none;
+}
+
+.open-default-task-container {
+    display: inline-flex;
+}
+
+.task-fill-prompt {
+    margin: 20px 10px 10px 10px;
+    color: var(--main-color);
+    display: none;
 }
 
 .task-date, .task-time, .save-task-btn, .delete-task-btn {
@@ -176,7 +186,7 @@ header {
     outline: none;
     border: 1px solid #ccc;
     border-radius: 0;
-    width: 550px;
+    width: 525px;
     padding-left: 5px;
 }
 
@@ -230,6 +240,10 @@ header {
 
 .delete-task-btn:hover {
     color: #557C83;
+}
+
+.delete-task-btn.delete-btn {
+    margin-left: 50px;
 }
 
 .task-date {
