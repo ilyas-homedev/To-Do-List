@@ -39,3 +39,11 @@ export function renderFoldersList(taskFolders, folderNameInput) {
     folderNameInput.value = '';
     return list.innerHTML = array.join("");
 }
+
+export function highlightTheFolder(event) {
+    const allFolders = Array.from(event.target.parentNode.children);
+    allFolders.forEach(folder => {
+        folder.classList.remove('folder-highlight');
+    });
+    event.target.classList.add('folder-highlight');
+}

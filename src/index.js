@@ -1,4 +1,4 @@
-import { createNewFolder, nameValidation, renderFoldersList } from './create-folder.js';
+import { createNewFolder, nameValidation, renderFoldersList, highlightTheFolder } from './create-folder.js';
 import { addEmptyInputField, renderTasksList, saveTask, deleteTask, taskDone } from './tasks.js';
 
 // variables
@@ -11,6 +11,7 @@ $createListBtn.addEventListener('click', createNewFolder);
 export let taskFolders = {};
 
 document.addEventListener('click', (event) => {
+    // Creating a new folder
     if (event.target.dataset.type === "createFolder") {
         const folderNameInput = document.querySelector('[data-type="folderName"]');
         const folderName = folderNameInput.value;
@@ -23,8 +24,10 @@ document.addEventListener('click', (event) => {
         }
     }
 
+    // Choosing folder from folders list
     if (event.target.dataset.type === "folder") {
         const name = event.target.textContent.trim();
+        highlightTheFolder(event);
         addEmptyInputField(name);
         renderTasksList(taskFolders, name);
     }
@@ -33,6 +36,7 @@ document.addEventListener('click', (event) => {
     const li = event.target.parentNode;
     const input = li.querySelector('.task-description');
 
+    // Saving a new task
     if (event.target.dataset.type === "save") {
         const headerName = li.parentNode.children[0].textContent.trim()
         const saveBtn = li.querySelector('[data-type="save"]');
@@ -49,10 +53,10 @@ document.addEventListener('click', (event) => {
 
     }
 
+    // Deleting a task
     if (event.target.dataset.type === "delete") {
         const headerName = document.querySelector('[data-type="folderTitle"]').textContent.trim();
         const deleteBtn = li.querySelector('[data-type="delete"]');
-        console.log(headerName);
 
         if (input.value.length > 0) {
             console.log('Deleted.');
@@ -63,6 +67,7 @@ document.addEventListener('click', (event) => {
         }
     }
 
+    // Marking a task as 'done' 
     if (event.target.dataset.type === "checkbox") {
         const checkboxBtn = li.querySelector('[data-type="checkbox"]');
         const date = li.querySelector('[type="date"]');
