@@ -1,5 +1,5 @@
 import { createNewFolder, nameValidation } from './create-folder.js';
-import { addEmptyInputField, renderTasksList, saveTask, deleteTask } from './tasks.js';
+import { addEmptyInputField, renderTasksList, saveTask, deleteTask, taskDone } from './tasks.js';
 
 // variables
 const $createListBtn = document.querySelector('[data-type="createListBtn"]');
@@ -38,15 +38,17 @@ document.addEventListener('click', (event) => {
         renderTasksList(taskFolders, name);
     }
 
+    // variables for buttons logic below
+    const li = event.target.parentNode;
+    const headerName = li.parentNode.parentNode.children[0].textContent.trim()
+    const input = li.querySelector('.task-description');
+
     if (event.target.dataset.type === "save") {
         console.log('Saving');
-        const li = event.target.parentNode;
-        const name = li.parentNode.parentNode.children[0].textContent.trim()
-        const input = li.querySelector('.task-description');
         const saveBtn = li.querySelector('[data-type="save"]');
         
         if (input.value.length > 0) {
-            saveTask(taskFolders, name, li);
+            saveTask(taskFolders, headerName, li);
         } else {
             saveBtn.disabled;
             console.log("Empty input");
@@ -56,16 +58,27 @@ document.addEventListener('click', (event) => {
 
     if (event.target.dataset.type === "delete") {
         console.log('Deleting');
-        const li = event.target.parentNode;
-        const name = li.parentNode.parentNode.children[0].textContent.trim();
-        const input = li.querySelector('.task-description');
         const deleteBtn = li.querySelector('[data-type="delete"]');
         
         if (input.value.length > 0) {
-            deleteTask(taskFolders, name, li);
+            deleteTask(taskFolders, headerName, li);
         } else {
             deleteBtn.disabled;
             console.log("Nothing to delete");
+        }
+    }
+
+    if (event.target.dataset.type === "checkbox") {
+        console.log("Task done!");
+        const checkboxBtn = li.querySelector('[data-type="checkbox"]');
+        const date = li.querySelector('[type="date"]');
+        const time = li.querySelector('[type="time"]');
+
+        if (input.value.length > 0) {
+            taskDone(checkboxBtn, input, date, time);
+        } else {
+            checkboxBtn.disabled;
+            console.log("Empty task can't be done.");
         }
     }
 })

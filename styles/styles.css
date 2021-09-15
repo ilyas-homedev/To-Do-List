@@ -14,6 +14,8 @@ body {
     padding: 0;
     margin: 0;
     max-width: 1200px;
+    border-left: 4px solid #E5EEC1;
+    border-right: 4px solid #E5EEC1;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 3fr;
@@ -156,13 +158,6 @@ header {
     margin-bottom: 20px;
 }
 
-.task-description {
-    outline: none;
-    border: 1px solid #ccc;
-    border-radius: 0;
-    width: 550px;
-}
-
 .task-date, .task-time, .save-task-btn, .delete-task-btn {
     cursor: pointer;
     outline: none;
@@ -175,6 +170,41 @@ header {
     font-size: 16px;
     box-sizing: border-box;
     padding: 3px;
+}
+
+.task-description {
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    width: 550px;
+    padding-left: 5px;
+}
+
+.task-description::placeholder {
+    color: var(--action-color);
+}
+
+.checkbox {
+    height: 30px;
+    width: 30px;
+    box-sizing: border-box;
+    align-items: center;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    position: relative;
+    color: #ccc;
+}
+
+.checkbox i {
+    pointer-events: none;
+    width: 16px;
+    position: absolute;
+    top: 7px;
+    left: 5px;
+}
+
+.checkbox:hover {
+    border-color: var(--folders);
 }
 
 .save-task-btn, .delete-task-btn {
@@ -206,8 +236,24 @@ header {
     width: 155px;
 }
 
-.task-date, .task-time {
+.task-description, .task-date, .task-time {
     border-left: none;
+    background-color: #eee;
+}
+
+.task-date, .task-time {
+    color: var(--action-color);
+}
+
+.saved-task {
+    background-color: #fff;
+    color: var(--main-color);
+}
+
+.task-done {
+    background-color: var(--folders);
+    color: #fff;
+    border-color: var(--folders);
 }
 
 .folder-title {
