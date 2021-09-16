@@ -11,15 +11,27 @@ export function addEmptyInputField(folderName) {
 
 export function renderTasksList(folderTasksList, folderName) {
     const tasks = folderTasksList[`${folderName}`].map(task => {
-        return `
-            <li id="${task.id}" data-type="task" class="task">
-                <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
-                <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
-                <input type="date" class="task-date saved-task" value="${task.date}" disabled>
-                <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
-                <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
-            </li>
-        `;
+        if (task.isDone) {
+            return `
+                <li id="${task.id}" data-type="task" class="task task-done">
+                    <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
+                    <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
+                    <input type="date" class="task-date saved-task" value="${task.date}" disabled>
+                    <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
+                    <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
+                </li>
+            `;
+        } else {
+            return `
+                <li id="${task.id}" data-type="task" class="task">
+                    <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
+                    <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
+                    <input type="date" class="task-date saved-task" value="${task.date}" disabled>
+                    <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
+                    <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
+                </li>
+            `;
+        }
     })
 
     const title = document.querySelector('[data-type="folderTitle"]');
@@ -27,6 +39,64 @@ export function renderTasksList(folderTasksList, folderName) {
 
     title.textContent = folderName;
     return list.innerHTML = tasks.join('');
+}
+
+export function renderAllTasks(folderTasks) {
+    const list = document.querySelector('[data-type="task-list"]');
+    const foldersArray = Object.keys(folderTasks);
+    let allTasksArray = [];
+
+    foldersArray.map(folder => {
+        const li = document.createElement('li');
+        const div = document.createElement('div');
+        div.style.borderBottom = "2px solid var(--main-color)";
+        const h2 = document.createElement('h2');
+        h2.textContent = folder;
+        h2.style.marginLeft = "20px";
+        const ul = document.createElement('ul');
+        ul.classList.add('list');
+        div.appendChild(h2);
+        div.appendChild(ul);
+        li.appendChild(div);
+
+        const tasks = folderTasks[`${folder}`].map(task => {
+            if (task.isDone) {
+                return `
+                    <li id="${task.id}" data-type="task" class="task task-done">
+                        <button data-type="checkbox" class="checkbox" disabled><i class="fas fa-check"></i></button>
+                        <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
+                        <input type="date" class="task-date saved-task" value="${task.date}" disabled>
+                        <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
+                    </li>
+                `;
+            } else {
+                return `
+                    <li id="${task.id}" data-type="task" class="task">
+                        <button data-type="checkbox" class="checkbox" disabled><i class="fas fa-check"></i></button>
+                        <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
+                        <input type="date" class="task-date saved-task" value="${task.date}" disabled>
+                        <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
+                    </li>
+                `;
+            }
+        })
+
+        ul.innerHTML = tasks.join('');
+        allTasksArray.push(li);
+    });
+    
+    const defaultTaskContainer = document.querySelector('[data-type="default-task-container"]');
+    defaultTaskContainer.classList.remove("open-default-task-container");
+    const title = document.querySelector('[data-type="folderTitle"]');
+    title.textContent = '';
+    const prompt = document.querySelector('.task-fill-prompt');
+    prompt.style.display = "none";
+
+    const taskBlocks = allTasksArray.map(block => {
+        return `<li>${block.innerHTML}</li>`
+    })
+    list.innerHTML = taskBlocks.join('');
+    
 }
 
 export function saveTask(folderTasksList, folderName, li) {
@@ -42,6 +112,7 @@ export function saveTask(folderTasksList, folderName, li) {
         description: description.value,
         date: date.value,
         time: time.value,
+        isDone: false
     }
 
     folderTasksList[`${folderName}`].unshift(newTask);
@@ -65,16 +136,17 @@ export function deleteTask(folderTasksList, folderName, li) {
     renderTasksList(folderTasksList, folderName);
 }
 
-export function taskDone(checkboxBtn, input, date, time) {
-    if (checkboxBtn.classList.contains('task-done')) {
-        checkboxBtn.classList.remove('task-done');
-        input.style.color = "var(--main-color)";
-        date.style.color = "var(--main-color)";
-        time.style.color = "var(--main-color)";
-    } else {
-        checkboxBtn.classList.add('task-done');
-        input.style.color = "#ccc";
-        date.style.color = "#ccc";
-        time.style.color = "#ccc";
-    }
+export function taskDone(taskFolders, headerName, li) {
+    const folder = taskFolders[`${headerName}`];
+    folder.forEach(task => {
+        if (task.id === li.id) {
+            if (li.classList.contains('task-done')) {
+                li.classList.remove('task-done');
+                task.isDone = false;
+            } else {
+                li.classList.add('task-done');
+                task.isDone = true;
+            }
+        }
+    })
 }

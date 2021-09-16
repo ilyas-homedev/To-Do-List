@@ -38,14 +38,14 @@ header {
     padding: 10px;
     cursor: pointer;
     margin: 10px 20px;
-    background-color: #eee;
-    border: 1px solid #ccc;
+    background-color: #fff;
+    border: 2px solid var(--action-color);
     border-radius: 5px;
     color: var(--main-color);
 }
 
 .btn:hover {
-    background-color: #fff;
+    background-color: var(--folders);
 }
 
 .sidebar {
@@ -155,6 +155,16 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+}
+
+.task.task-done .checkbox {
+    background-color: var(--folders);
+    color: #fff;
+    border-color: var(--folders);
+}
+
+.task.task-done input {
+    color: #ccc;
 }
 
 .default-task-container {
@@ -267,12 +277,6 @@ header {
     color: var(--main-color);
 }
 
-.task-done {
-    background-color: var(--folders);
-    color: #fff;
-    border-color: var(--folders);
-}
-
 .folder-title {
     margin: 20px 10px;
     color: var(--main-color);
@@ -282,3 +286,5 @@ header {
 .list-container {
     border-top: 2px solid #ccc;
 }
+
+/* TASK DONE */

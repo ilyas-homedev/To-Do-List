@@ -1,5 +1,5 @@
 import { createNewFolder, nameValidation, renderFoldersList, highlightTheFolder } from './create-folder.js';
-import { addEmptyInputField, renderTasksList, saveTask, deleteTask, taskDone } from './tasks.js';
+import { addEmptyInputField, renderTasksList, saveTask, deleteTask, taskDone, renderAllTasks } from './tasks.js';
 
 // variables
 const $createListBtn = document.querySelector('[data-type="createListBtn"]');
@@ -22,6 +22,11 @@ document.addEventListener('click', (event) => {
             renderTasksList(taskFolders, folderName);
             renderFoldersList(taskFolders, folderNameInput);
         }
+    }
+
+    // Rendering all tasks and folders together
+    if (event.target.dataset.type === "showAllTasksBtn") {
+        renderAllTasks(taskFolders);
     }
 
     // Choosing folder from folders list
@@ -70,12 +75,11 @@ document.addEventListener('click', (event) => {
     // Marking a task as 'done' 
     if (event.target.dataset.type === "checkbox") {
         const checkboxBtn = li.querySelector('[data-type="checkbox"]');
-        const date = li.querySelector('[type="date"]');
-        const time = li.querySelector('[type="time"]');
+        const headerName = document.querySelector('[data-type="folderTitle"]').textContent.trim();
 
         if (input.value.length > 0) {
             console.log("Task done!");
-            taskDone(checkboxBtn, input, date, time);
+            taskDone(taskFolders, headerName, li);
         } else {
             checkboxBtn.disabled;
             console.log("Empty task can't be done.");
