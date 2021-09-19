@@ -1,12 +1,13 @@
 const $emptyContainer = document.querySelector('[data-type="empty-container"]');
+const $list = document.querySelector('[data-type="list"]');
 
-export function createNewFolder() {
+export function createNewFolderName() {
     const html = `
         <div class="create-folder-container">
             <h2>Create new folder</h2>
             <div class="input-btn-field">
-                <input data-type="folderName" type="text" class="create-folder-input" placeholder="Folder name">
-                <button data-type="createFolder" class="create-folder-btn"><i class="fas fa-plus"></i></button>
+                <input data-type="folderNameInput" type="text" class="create-folder-input" placeholder="Folder name">
+                <button data-type="createFolderBtn" class="create-folder-btn"><i class="fas fa-plus"></i></button>
                 <p class="invalid-name-prompt">Folder name can't be empty!</p>
             </div>
         </div>
@@ -18,7 +19,6 @@ export function createNewFolder() {
 
 export function nameValidation(name) {
     const prompt = $emptyContainer.querySelector('.invalid-name-prompt');
-
     if (name !== "") {
         prompt.style.display = "none";
         return true;
@@ -28,16 +28,12 @@ export function nameValidation(name) {
     }
 }
 
-export function renderFoldersList(taskFolders, folderNameInput) {
-    const list = document.querySelector('[data-type="list"]');
-    const foldersArray = Object.keys(taskFolders);
-    const array = foldersArray.map(name => {
-        return `
-            <li data-type="folder" class="folder"><i class="far fa-folder"></i> ${name}</li>
-        `;
-    })
-    folderNameInput.value = '';
-    return list.innerHTML = array.join("");
+export function addToFoldersList(folderName) {
+    const li = document.createElement("li");
+    li.dataset.type = "folder";
+    li.classList.add("folder");
+    li.innerHTML = `<i class="far fa-folder"></i> ${folderName}</li>`
+    $list.appendChild(li);
 }
 
 export function highlightTheFolder(event) {

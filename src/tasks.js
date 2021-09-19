@@ -1,152 +1,131 @@
+import { saveTaskToLocalStorage, deleteTaskFromLocalStorage } from './local-storage.js';
+
+const $defaultTaskContainer = document.querySelector('[data-type="default-task-container"]');
+const $title = document.querySelector('[data-type="folderTitle"]');
+const $prompt = document.querySelector('.task-fill-prompt');
+const $list = document.querySelector('[data-type="task-list"]');
+
+// Adds empty inputs for creating tasks
 export function addEmptyInputField(folderName) {
-    const defaultTaskContainer = document.querySelector('[data-type="default-task-container"]');
-    defaultTaskContainer.classList.add("open-default-task-container");
-
-    const title = document.querySelector('[data-type="folderTitle"]');
-    title.textContent = folderName;
-
-    const prompt = document.querySelector('.task-fill-prompt');
-    prompt.style.display = "block";
+    $list.innerHTML = "";
+    $defaultTaskContainer.classList.add("open-default-task-container");
+    $title.textContent = folderName;
+    $prompt.style.display = "block";
 }
 
-export function renderTasksList(folderTasksList, folderName) {
-    const tasks = folderTasksList[`${folderName}`].map(task => {
-        if (task.isDone) {
-            return `
-                <li id="${task.id}" data-type="task" class="task task-done">
-                    <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
-                    <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
-                    <input type="date" class="task-date saved-task" value="${task.date}" disabled>
-                    <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
-                    <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
-                </li>
-            `;
-        } else {
-            return `
-                <li id="${task.id}" data-type="task" class="task">
-                    <button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
-                    <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
-                    <input type="date" class="task-date saved-task" value="${task.date}" disabled>
-                    <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
-                    <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
-                </li>
-            `;
-        }
-    })
+export function addToTaskList(taskObj) {
+    const li = document.createElement("li");
+    li.id = taskObj.id;
+    li.dataset.type = "task";
+    li.classList.add("task");
 
-    const title = document.querySelector('[data-type="folderTitle"]');
-    const list = document.querySelector('[data-type="task-list"]');
+    if (taskObj.isForToday) {
+        li.classList.add('todays-task');
+    }
+    if (taskObj.isDone) {
+        li.classList.add('task-done');
+    }
 
-    title.textContent = folderName;
-    return list.innerHTML = tasks.join('');
+    li.innerHTML = `<button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
+                    <input type="text" placeholder="Task" class="task-description saved-task" value="${taskObj.description}" disabled>
+                    <input type="date" class="task-date saved-task" value="${taskObj.date}" disabled>
+                    <input type="time" class="task-time saved-task" value="${taskObj.time}" disabled>   
+                    <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>`;
+
+    $list.appendChild(li);
 }
 
-export function renderAllTasks(folderTasks) {
-    const list = document.querySelector('[data-type="task-list"]');
-    const foldersArray = Object.keys(folderTasks);
-    let allTasksArray = [];
-
-    foldersArray.map(folder => {
-        const li = document.createElement('li');
-        const div = document.createElement('div');
-        div.style.borderBottom = "2px solid var(--main-color)";
-        const h2 = document.createElement('h2');
-        h2.textContent = folder;
-        h2.style.marginLeft = "20px";
-        const ul = document.createElement('ul');
-        ul.classList.add('list');
-        div.appendChild(h2);
-        div.appendChild(ul);
-        li.appendChild(div);
-
-        const tasks = folderTasks[`${folder}`].map(task => {
-            if (task.isDone) {
-                return `
-                    <li id="${task.id}" data-type="task" class="task task-done">
-                        <button data-type="checkbox" class="checkbox" disabled><i class="fas fa-check"></i></button>
-                        <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
-                        <input type="date" class="task-date saved-task" value="${task.date}" disabled>
-                        <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
-                    </li>
-                `;
-            } else {
-                return `
-                    <li id="${task.id}" data-type="task" class="task">
-                        <button data-type="checkbox" class="checkbox" disabled><i class="fas fa-check"></i></button>
-                        <input type="text" placeholder="Task" class="task-description saved-task" value="${task.description}" disabled>
-                        <input type="date" class="task-date saved-task" value="${task.date}" disabled>
-                        <input type="time" class="task-time saved-task" value="${task.time}" disabled>   
-                    </li>
-                `;
-            }
-        })
-
-        ul.innerHTML = tasks.join('');
-        allTasksArray.push(li);
-    });
-    
-    const defaultTaskContainer = document.querySelector('[data-type="default-task-container"]');
-    defaultTaskContainer.classList.remove("open-default-task-container");
-    const title = document.querySelector('[data-type="folderTitle"]');
-    title.textContent = '';
-    const prompt = document.querySelector('.task-fill-prompt');
-    prompt.style.display = "none";
-
-    const taskBlocks = allTasksArray.map(block => {
-        return `<li>${block.innerHTML}</li>`
-    })
-    list.innerHTML = taskBlocks.join('');
-    
-}
-
-export function saveTask(folderTasksList, folderName, li) {
+export function saveTask(folderName, li) {
     const description = li.querySelector('.task-description');
     const date = li.querySelector('.task-date');
     const time = li.querySelector('.task-time');
     
     const randomNumber = Math.floor(Math.random() * 10000);
-    const id = `${folderName}_task_${randomNumber}`;
+    const id = `${folderName}-task-${randomNumber}`;
 
     const newTask = {
         id: id,
         description: description.value,
         date: date.value,
         time: time.value,
-        isDone: false
+        isDone: false,
+        isForToday: false,
     }
 
-    folderTasksList[`${folderName}`].unshift(newTask);
-    console.log(folderTasksList);
-
-    renderTasksList(folderTasksList, folderName);
+    saveTaskToLocalStorage(newTask);
+    addToTaskList(newTask);
 }
 
-export function deleteTask(folderTasksList, folderName, li) {
-    const taskArray = folderTasksList[`${folderName}`];
-    taskArray.forEach(task => {
-        if (task.id === li.id) {
-            const index = taskArray.indexOf(task);
-            taskArray.splice(index, 1);
-        }
-    })
+export function deleteTask(li) {
+    li.remove();
+    deleteTaskFromLocalStorage(li);
+}
 
-    if (taskArray.length === 0) {
-        addEmptyInputField(folderTasksList, folderName);
+export function taskDone(li) {
+    if (li.classList.contains('task-done')) {
+        li.classList.remove('task-done');
+        console.log("Task not completed.");
+        return false;
+    } else {
+        li.classList.add('task-done');
+        console.log("Task done!");
+        return true;
     }
-    renderTasksList(folderTasksList, folderName);
 }
 
-export function taskDone(taskFolders, headerName, li) {
-    const folder = taskFolders[`${headerName}`];
-    folder.forEach(task => {
-        if (task.id === li.id) {
-            if (li.classList.contains('task-done')) {
-                li.classList.remove('task-done');
-                task.isDone = false;
-            } else {
-                li.classList.add('task-done');
-                task.isDone = true;
-            }
-        }
-    })
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+export function checkDateAndTime(task) {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    let currentDateString = `${currentYear}-${currentMonth}-${currentDay}`;
+    let currentTimeString = '00:00';
+
+    let taskDatePlug = '';
+    if (currentMonth.toString().length === 1) {
+        taskDatePlug = `${currentYear}-0${currentMonth}-${currentDay}`;
+    } else {
+        taskDatePlug = `${currentYear}-${currentMonth}-${currentDay}`;
+    }
+
+    let date = '';
+    let time = '';
+    
+
+    if (task.date) {
+        date = task.date;
+    } else {
+        date = currentDateString;
+        task.date = taskDatePlug;
+    }
+    if (task.time) {
+        time = task.time;
+    } else {
+        time = currentTimeString
+    }
+
+    const monthArr = date.split('-')[1].split('');
+    let monthIndex = null;
+    if (monthArr[0] === '0') {
+        monthIndex = +monthArr[1];
+    } else {
+        monthIndex = +monthArr.join('');
+    }
+
+    const day = date.split('-')[2];
+    const year = date.split('-')[0];
+    
+    const dateString = `${day} ${months[monthIndex]} ${year} ${time}:00 GMT`;
+    const shortDateString = `${year}-${monthIndex}-${day}`;
+
+    const dateAndTime = Date.parse(dateString);
+    // console.log(currentDate.getTime());
+
+    if (shortDateString === currentDateString) {
+        return 'todays-task';
+    }
+
+    return '';
 }

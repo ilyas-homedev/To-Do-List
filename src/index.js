@@ -1,40 +1,45 @@
-import { createNewFolder, nameValidation, renderFoldersList, highlightTheFolder } from './create-folder.js';
-import { addEmptyInputField, renderTasksList, saveTask, deleteTask, taskDone, renderAllTasks } from './tasks.js';
+import { createNewFolderName, nameValidation, addToFoldersList, highlightTheFolder } from './create-folder.js';
+import { addEmptyInputField, saveTask, deleteTask, taskDone} from './tasks.js';
+import { saveFolderToLocalStorage, getFoldersFromLocalStorage, getTasksFromLocalStorage, saveTaskDoneToLocalStorage, renderAllTasksFromLocalStorage } from './local-storage.js';
+// import { saveToLocalStorage, getDataFromLocalStorage } from './local-storage.js';
 
 // variables
 const $createListBtn = document.querySelector('[data-type="createListBtn"]');
 
 // listeners
-$createListBtn.addEventListener('click', createNewFolder);
+document.addEventListener('DOMContentLoaded', getFoldersFromLocalStorage);
+$createListBtn.addEventListener('click', createNewFolderName);
 
 // main DB
 export let taskFolders = {};
 
+
+
 document.addEventListener('click', (event) => {
     // Creating a new folder
-    if (event.target.dataset.type === "createFolder") {
-        const folderNameInput = document.querySelector('[data-type="folderName"]');
-        const folderName = folderNameInput.value;
+    if (event.target.dataset.type === "createFolderBtn") {
+        const $folderNameInput = document.querySelector('[data-type="folderNameInput"]');
+        const folderName = $folderNameInput.value;
+        $folderNameInput.value = '';
 
         if (nameValidation(folderName)) {
-            taskFolders[`${folderName}`] = [];
+            saveFolderToLocalStorage(folderName);
             addEmptyInputField(folderName);
-            renderTasksList(taskFolders, folderName);
-            renderFoldersList(taskFolders, folderNameInput);
+            addToFoldersList(folderName);
         }
     }
 
     // Rendering all tasks and folders together
     if (event.target.dataset.type === "showAllTasksBtn") {
-        renderAllTasks(taskFolders);
+        renderAllTasksFromLocalStorage();
     }
 
     // Choosing folder from folders list
     if (event.target.dataset.type === "folder") {
-        const name = event.target.textContent.trim();
+        const folderName = event.target.textContent.trim();
         highlightTheFolder(event);
-        addEmptyInputField(name);
-        renderTasksList(taskFolders, name);
+        addEmptyInputField(folderName);
+        getTasksFromLocalStorage(folderName);
     }
 
     // variables for buttons logic below
@@ -47,25 +52,27 @@ document.addEventListener('click', (event) => {
         const saveBtn = li.querySelector('[data-type="save"]');
         
         if (input.value.length > 0) {
-            console.log('Saved.');
-            saveTask(taskFolders, headerName, li);
+            saveTask(headerName, li);
             const defaultTaskInput = document.querySelector('[data-type="default-task-input"]');
+            const defaultDate = document.querySelector('[type="date"]');
+            const defaultTime = document.querySelector('[type="time"]');
             defaultTaskInput.value = "";
+            defaultDate.value = "";
+            defaultTime.value = "";
+            console.log('Saved.');
         } else {
             saveBtn.disabled;
             console.log("Can't save empty task.");
         }
-
     }
 
     // Deleting a task
     if (event.target.dataset.type === "delete") {
-        const headerName = document.querySelector('[data-type="folderTitle"]').textContent.trim();
         const deleteBtn = li.querySelector('[data-type="delete"]');
 
         if (input.value.length > 0) {
+            deleteTask(li);
             console.log('Deleted.');
-            deleteTask(taskFolders, headerName, li);
         } else {
             deleteBtn.disabled;
             console.log("Nothing to delete");
@@ -75,11 +82,10 @@ document.addEventListener('click', (event) => {
     // Marking a task as 'done' 
     if (event.target.dataset.type === "checkbox") {
         const checkboxBtn = li.querySelector('[data-type="checkbox"]');
-        const headerName = document.querySelector('[data-type="folderTitle"]').textContent.trim();
-
+        let isDone;
         if (input.value.length > 0) {
-            console.log("Task done!");
-            taskDone(taskFolders, headerName, li);
+            isDone = taskDone(li);
+            saveTaskDoneToLocalStorage(li, isDone);
         } else {
             checkboxBtn.disabled;
             console.log("Empty task can't be done.");

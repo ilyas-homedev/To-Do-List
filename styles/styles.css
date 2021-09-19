@@ -92,7 +92,7 @@ header {
     font-size: 20px;
     margin: 0 10px;
     box-sizing: border-box;
-    color: var(--action-color);
+    color: #ccc;
     border: 2px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
@@ -105,6 +105,7 @@ header {
 .create-folder-btn:hover {
     background-color: var(--folders);
     border-color: var(--action-color);
+    color: #fff;
 }
 
 .invalid-name-prompt {
@@ -125,6 +126,7 @@ header {
 .list {
     list-style-type: none;
     padding: 0;
+    margin-bottom: 10px;
 }
 
 .folder {
@@ -157,14 +159,29 @@ header {
     justify-content: flex-start;
 }
 
+.task.todays-task input {
+    border-top-color: var(--action-color);
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--action-color);
+}
+.task.todays-task input[type="time"] {
+    border-right-color: var(--action-color);
+}
+
 .task.task-done .checkbox {
     background-color: var(--folders);
     color: #fff;
     border-color: var(--folders);
 }
-
 .task.task-done input {
     color: #ccc;
+    border-color: #ccc;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+.task.task-done input[type="time"] {
+    border-color: #ccc;
 }
 
 .default-task-container {
