@@ -1,19 +1,20 @@
-import { createNewFolderName, nameValidation, addToFoldersList, highlightTheFolder } from './create-folder.js';
+import { createNewFolderName, nameValidation, addToFoldersList, highlightTheFolder, confirmFolderDeleting, deleteFolder } from './create-folder.js';
 import { addEmptyInputField, saveTask, deleteTask, taskDone} from './tasks.js';
-import { saveFolderToLocalStorage, getFoldersFromLocalStorage, getTasksFromLocalStorage, saveTaskDoneToLocalStorage, renderAllTasksFromLocalStorage } from './local-storage.js';
-// import { saveToLocalStorage, getDataFromLocalStorage } from './local-storage.js';
+import { saveFolderToLocalStorage, getFoldersFromLocalStorage, getTasksFromLocalStorage, saveTaskDoneToLocalStorage, renderAllTasksFromLocalStorage, checkIsFolderEmptyFromLocalStorage, deleteFolderAndTasksFromLocalStorage } from './local-storage.js';
 
 // variables
 const $createListBtn = document.querySelector('[data-type="createListBtn"]');
+const $confirmationDialog = document.querySelector('.confirmation-container');
+const $layout = document.querySelector('.layout');
 
 // listeners
 document.addEventListener('DOMContentLoaded', getFoldersFromLocalStorage);
 $createListBtn.addEventListener('click', createNewFolderName);
-
-// main DB
-export let taskFolders = {};
+$confirmationDialog.addEventListener('click', folderDeletingConfirmation);
 
 
+// Variable for saving folder li for deleting it after confirmation
+let folderLi
 
 document.addEventListener('click', (event) => {
     // Creating a new folder
@@ -32,6 +33,31 @@ document.addEventListener('click', (event) => {
     // Rendering all tasks and folders together
     if (event.target.dataset.type === "showAllTasksBtn") {
         renderAllTasksFromLocalStorage();
+    }
+
+    // Open delete buttons for folders li
+    if (event.target.dataset.type === "delete-folder-btn") {
+        const trashbuskets = document.querySelectorAll('.folder-trash');
+        trashbuskets.forEach(busket => {
+            busket.style.display = "block";
+        })
+    }
+
+    // Click on trash busket of folder for deleting it
+    if (event.target.dataset.type === "delete-current-folder-btn") {
+        const trashbuskets = document.querySelectorAll('.folder-trash');
+        trashbuskets.forEach(busket => {
+            busket.style.display = "none";
+        })
+        const folderName = event.target.parentNode.textContent.trim();
+        const folderIsEmpty = checkIsFolderEmptyFromLocalStorage(folderName);
+        if (folderIsEmpty) {
+            deleteFolderAndTasksFromLocalStorage(folderName);
+            deleteFolder(event.target.parentNode);
+        } else {
+            openDialog(folderName);
+            folderLi = event.target.parentNode;
+        }
     }
 
     // Choosing folder from folders list
@@ -92,3 +118,27 @@ document.addEventListener('click', (event) => {
         }
     }
 })
+
+function folderDeletingConfirmation(event) {
+    if (event.target.dataset.type === "confirmDeleting") {
+        deleteFolderAndTasksFromLocalStorage(event.target.id);
+        deleteFolder(folderLi);
+        closeDialog();
+    }
+    if (event.target.dataset.type === "cancelDeleting") {
+        closeDialog();
+    }
+}
+
+function openDialog(folderName) {
+    $confirmationDialog.style.display = "block";
+    $confirmationDialog.id = folderName;
+    $layout.style.display = "block";
+}
+
+function closeDialog() {
+    $confirmationDialog.style.display = "none";
+    $confirmationDialog.id = "";
+    $layout.style.display = "none";
+}
+

@@ -17,6 +17,9 @@
     <div class="sidebar">
         <h2>Folders</h2>
         <ul data-type="list" class="list"></ul>
+        <div data-type="delete-folder-container" class="delete-folder-container">
+            <button data-type="delete-folder-btn" class="btn delete-folder-btn">Delete folder</button>
+        </div>
     </div>
 
     <div data-type="content" class="content">
@@ -37,6 +40,15 @@
             </ul>
         </div>
     </div>
+
+    <div class="confirmation-container">
+        <p>This folder contains tasks. Do you really want to delete it?</p>
+        <div class="confirmation-buttons">
+            <button data-type="confirmDeleting" class="btn">Delete</button>
+            <button data-type="cancelDeleting" class="btn">Cancel</button>
+        </div>
+    </div>
+    <div class="layout"></div>
 
     <script type="module" src="./src/index.js"></script>
 </body>

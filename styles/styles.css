@@ -127,6 +127,8 @@ header {
     list-style-type: none;
     padding: 0;
     margin-bottom: 10px;
+    max-height: 450px;
+    overflow: scroll;
 }
 
 .folder {
@@ -137,8 +139,28 @@ header {
     cursor: pointer;
 }
 
-.folder i {
+.folder .fa-folder {
     pointer-events: none;
+}
+
+.folder-trash {
+    border: 1px solid #8A0000;
+    padding: 5px;
+    background-color: #fff;
+    color: #8A0000;
+    float: right;
+    cursor: pointer;
+    display: none;
+}
+
+.folder-trash i {
+    pointer-events: none;
+}
+
+.folder-trash:hover {
+    color: #ccc;
+    border-color: #ccc;
+    background-color: #8A0000;
 }
 
 .folder:hover {
@@ -147,6 +169,18 @@ header {
 
 .folder-highlight {
     background-color: var(--folders);
+}
+
+.delete-folder-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    border-top: 2px solid #ccc;
+}
+
+.delete-folder-btn {
+    padding: 5px 10px;
+    margin: 20px 0;
 }
 
 /* tasks */
@@ -304,4 +338,49 @@ header {
     border-top: 2px solid #ccc;
 }
 
-/* TASK DONE */
+/* Confirmation dialog window of deleting */
+.confirmation-container {
+    position: absolute;
+    top: 200px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 18px;
+    max-width: 500px;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 2px solid var(--main-color);
+    border-radius: 5px;
+    background-color: #fff;
+    z-index: 100;
+    display: none;
+}
+
+.confirmation-buttons {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.confirmation-buttons button {
+    height: 40px;
+    padding: 5px;
+}
+
+.confirmation-buttons button:first-child {
+    border-color: #8A0000;
+}
+
+.confirmation-buttons button:first-child:hover {
+    background-color: #ccc;
+}
+
+.layout {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    display: none;
+}

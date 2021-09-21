@@ -92,7 +92,6 @@ export function renderAllTasksFromLocalStorage() {
     foldersArr.map(folder => {
         const li = document.createElement('li');
         const div = document.createElement('div');
-        // div.style.borderBottom = "1px solid var(--main-color)";
         const h2 = document.createElement('h2');
         h2.textContent = folder;
         h2.style.marginLeft = "20px";
@@ -141,4 +140,22 @@ export function renderAllTasksFromLocalStorage() {
         return `<li>${block.innerHTML}</li>`
     })
     $list.innerHTML = taskBlocks.join('');
+}
+
+export function checkIsFolderEmptyFromLocalStorage(folderName) {
+    let data = JSON.parse(localStorage.getItem('data'));
+    const folderTasks = data[1].filter(task => task.id.split('-')[0] === folderName);
+    if (folderTasks.length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function deleteFolderAndTasksFromLocalStorage(folderName) {
+    let data = JSON.parse(localStorage.getItem('data'));
+    const folderIndex = data[0].indexOf(folderName);
+    data[0].splice(folderIndex, 1);
+    data[1] = data[1].filter(taskObj => taskObj.id.split('-')[0] !== folderName);
+    localStorage.setItem('data', JSON.stringify(data));
 }
