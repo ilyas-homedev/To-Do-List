@@ -4,6 +4,7 @@
     --main-color: #242424;
     --action-color: #3AADA8;
     --folders: #A2D5AC;
+    --warning-red: #8A0000;
 }
 
 * {
@@ -12,17 +13,20 @@
 
 body {
     padding: 0;
-    margin: 0;
+    margin: 0 auto;
     max-width: 1200px;
     border-left: 4px solid #E5EEC1;
     border-right: 4px solid #E5EEC1;
-    margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-areas: 
         "header header"
         "sidebar content"
     ;
+}
+
+i {
+    pointer-events: none;
 }
 
 header {
@@ -33,11 +37,14 @@ header {
     background-color: #E5EEC1;
 }
 
-.btn {
-    font-size: 20px;
-    padding: 10px;
-    cursor: pointer;
+header button {
+    padding: 5px;
     margin: 10px 20px;
+}
+
+.btn {
+    font-size: 18px;
+    cursor: pointer;
     background-color: #fff;
     border: 2px solid var(--action-color);
     border-radius: 5px;
@@ -75,7 +82,7 @@ header {
 
 .create-folder-input {
     width: 200px;
-    font-size: 24px;
+    font-size: 20px;
     outline: none;
     padding: 5px;
     border: 2px solid var(--action-color);
@@ -87,29 +94,19 @@ header {
 }
 
 .create-folder-btn {
-    width: 42px;
-    height: 42px;
-    font-size: 20px;
+    width: 38px;
+    height: 38px;
     margin: 0 10px;
     box-sizing: border-box;
     color: #ccc;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.create-folder-btn i {
-    pointer-events: none;
 }
 
 .create-folder-btn:hover {
-    background-color: var(--folders);
-    border-color: var(--action-color);
     color: #fff;
 }
 
 .invalid-name-prompt {
-    font-size: 20px;
+    font-size: 16px;
     display: none;
     margin: 0;
 }
@@ -135,36 +132,23 @@ header {
     font-size: 24px;
     margin: 5px 10px;
     padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.folder .fa-folder {
-    pointer-events: none;
+    border: none;
 }
 
 .folder-trash {
-    border: 1px solid #8A0000;
+    border: 1px solid var(--warning-red);
     padding: 5px;
     background-color: #fff;
-    color: #8A0000;
+    color: var(--warning-red);
     float: right;
     cursor: pointer;
     display: none;
 }
 
-.folder-trash i {
-    pointer-events: none;
-}
-
 .folder-trash:hover {
     color: #ccc;
     border-color: #ccc;
-    background-color: #8A0000;
-}
-
-.folder:hover {
-    background-color: var(--folders);
+    background-color: var(--warning-red);
 }
 
 .folder-highlight {
@@ -232,24 +216,21 @@ header {
     display: none;
 }
 
-.task-date, .task-time, .save-task-btn, .delete-task-btn {
-    cursor: pointer;
-    outline: none;
-    border: 1px solid #ccc;
-    border-radius: 0;
-}
-
 .task-description, .task-date, .task-time, .save-task-btn, .delete-task-btn {
     height: 30px;
     font-size: 16px;
     box-sizing: border-box;
     padding: 3px;
+    outline: none;
+    border-radius: 0;
+    border: 1px solid #ccc;
 }
 
-.task-description {
-    outline: none;
-    border: 1px solid #ccc;
-    border-radius: 0;
+.task-date, .task-time, .save-task-btn, .delete-task-btn {
+    cursor: pointer;
+}
+
+.task-description {    
     width: 525px;
     padding-left: 5px;
 }
@@ -258,19 +239,21 @@ header {
     color: var(--action-color);
 }
 
-.checkbox {
+.task-buttons {
     height: 30px;
     width: 30px;
     box-sizing: border-box;
     align-items: center;
-    border: 2px solid #ccc;
     cursor: pointer;
+}
+
+.checkbox {
+    border: 2px solid #ccc;
     position: relative;
     color: #ccc;
 }
 
 .checkbox i {
-    pointer-events: none;
     width: 16px;
     position: absolute;
     top: 7px;
@@ -282,12 +265,7 @@ header {
 }
 
 .save-task-btn, .delete-task-btn {
-    width: 30px;
     margin-left: 10px;
-}
-
-.save-task-btn i, .delete-task-btn i {
-    pointer-events: none;
 }
 
 .save-task-btn {
@@ -295,15 +273,16 @@ header {
 }
 
 .save-task-btn:hover {
-    color: #557C83;
+    background-color: #557C83;
 }
 
 .delete-task-btn {
-    border-color: #8A0000;
+    border-color: var(--warning-red);
 }
 
 .delete-task-btn:hover {
-    color: #557C83;
+    color: #fff;
+    background-color: var(--warning-red);
 }
 
 .delete-task-btn.delete-btn {
@@ -331,7 +310,7 @@ header {
 .folder-title {
     margin: 20px 10px;
     color: var(--main-color);
-    font-size: 40px;
+    font-size: 32px;
 }
 
 .list-container {
@@ -350,7 +329,7 @@ header {
     max-width: 500px;
     box-sizing: border-box;
     padding: 10px;
-    border: 2px solid var(--main-color);
+    border: 2px solid var(--action-color);
     border-radius: 5px;
     background-color: #fff;
     z-index: 100;
@@ -363,16 +342,16 @@ header {
 }
 
 .confirmation-buttons button {
-    height: 40px;
     padding: 5px;
 }
 
 .confirmation-buttons button:first-child {
-    border-color: #8A0000;
+    border-color: var(--warning-red);
 }
 
 .confirmation-buttons button:first-child:hover {
-    background-color: #ccc;
+    background-color: var(--warning-red);
+    color: #fff;
 }
 
 .layout {
@@ -383,4 +362,5 @@ header {
     left: 0;
     z-index: 1;
     display: none;
+    background-color: rgba(255, 255, 255, .4);
 }

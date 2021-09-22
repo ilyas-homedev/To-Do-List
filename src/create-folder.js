@@ -13,7 +13,7 @@ export function createNewFolderName() {
             <h2>Create new folder</h2>
             <div class="input-btn-field">
                 <input data-type="folderNameInput" type="text" class="create-folder-input" placeholder="Folder name">
-                <button data-type="createFolderBtn" class="create-folder-btn"><i class="fas fa-plus"></i></button>
+                <button data-type="createFolderBtn" class="btn create-folder-btn"><i class="fas fa-plus"></i></button>
                 <p class="invalid-name-prompt">Folder name can't be empty!</p>
             </div>
         </div>
@@ -43,6 +43,7 @@ export function nameValidation(name) {
 export function addToFoldersList(folderName) {
     const li = document.createElement("li");
     li.dataset.type = "folder";
+    li.classList.add("btn");
     li.classList.add("folder");
     li.innerHTML = `<i class="far fa-folder"></i> ${folderName}<button data-type="delete-current-folder-btn" class="folder-trash"><i class="far fa-trash-alt"></i></button>`
     $list.appendChild(li);

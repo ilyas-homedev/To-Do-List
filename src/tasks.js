@@ -26,11 +26,11 @@ export function addToTaskList(taskObj) {
         li.classList.add('task-done');
     }
 
-    li.innerHTML = `<button data-type="checkbox" class="checkbox"><i class="fas fa-check"></i></button>
+    li.innerHTML = `<button data-type="checkbox" class="task-buttons checkbox"><i class="fas fa-check"></i></button>
                     <input type="text" placeholder="Task" class="task-description saved-task" value="${taskObj.description}" disabled>
                     <input type="date" class="task-date saved-task" value="${taskObj.date}" disabled>
                     <input type="time" class="task-time saved-task" value="${taskObj.time}" disabled>   
-                    <button data-type="delete" class="delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>`;
+                    <button data-type="delete" class="task-buttons delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>`;
 
     $list.appendChild(li);
 }
