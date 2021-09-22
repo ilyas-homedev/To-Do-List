@@ -1,3 +1,5 @@
+import { checkIsFolderExistsFromLocalStorage } from './local-storage.js';
+
 const $emptyContainer = document.querySelector('[data-type="empty-container"]');
 const $list = document.querySelector('[data-type="list"]');
 const $defaultTaskContainer = document.querySelector('[data-type="default-task-container"]');
@@ -23,12 +25,18 @@ export function createNewFolderName() {
 
 export function nameValidation(name) {
     const prompt = $emptyContainer.querySelector('.invalid-name-prompt');
-    if (name !== "") {
-        prompt.style.display = "none";
-        return true;
-    } else {
+    const existedName = checkIsFolderExistsFromLocalStorage(name);
+
+    if (name === "") {
+        prompt.textContent = "Folder name can't be empty!";
         prompt.style.display = "block";
         return false;
+    } else if (existedName) {
+        prompt.textContent = "Folder with this name is already exists!";
+        prompt.style.display = "block";
+        return false;
+    } else {
+        return true;
     }
 }
 
@@ -46,10 +54,6 @@ export function highlightTheFolder(event) {
         folder.classList.remove('folder-highlight');
     });
     event.target.classList.add('folder-highlight');
-}
-
-export function confirmFolderDeleting() {
-    return true;
 }
 
 export function deleteFolder(li) {

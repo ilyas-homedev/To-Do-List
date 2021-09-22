@@ -159,3 +159,16 @@ export function deleteFolderAndTasksFromLocalStorage(folderName) {
     data[1] = data[1].filter(taskObj => taskObj.id.split('-')[0] !== folderName);
     localStorage.setItem('data', JSON.stringify(data));
 }
+
+export function checkIsFolderExistsFromLocalStorage(folderName) {
+    let data = JSON.parse(localStorage.getItem('data'));
+    if (data) {
+        if (data[0].includes(folderName)) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}

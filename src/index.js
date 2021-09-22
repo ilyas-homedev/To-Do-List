@@ -1,4 +1,4 @@
-import { createNewFolderName, nameValidation, addToFoldersList, highlightTheFolder, confirmFolderDeleting, deleteFolder } from './create-folder.js';
+import { createNewFolderName, nameValidation, addToFoldersList, highlightTheFolder, deleteFolder } from './create-folder.js';
 import { addEmptyInputField, saveTask, deleteTask, taskDone} from './tasks.js';
 import { saveFolderToLocalStorage, getFoldersFromLocalStorage, getTasksFromLocalStorage, saveTaskDoneToLocalStorage, renderAllTasksFromLocalStorage, checkIsFolderEmptyFromLocalStorage, deleteFolderAndTasksFromLocalStorage } from './local-storage.js';
 
@@ -20,7 +20,7 @@ document.addEventListener('click', (event) => {
     // Creating a new folder
     if (event.target.dataset.type === "createFolderBtn") {
         const $folderNameInput = document.querySelector('[data-type="folderNameInput"]');
-        const folderName = $folderNameInput.value;
+        const folderName = $folderNameInput.value.trim();
         $folderNameInput.value = '';
 
         if (nameValidation(folderName)) {
@@ -37,15 +37,29 @@ document.addEventListener('click', (event) => {
 
     // Open delete buttons for folders li
     if (event.target.dataset.type === "delete-folder-btn") {
-        const trashbuskets = document.querySelectorAll('.folder-trash');
-        trashbuskets.forEach(busket => {
-            busket.style.display = "block";
-        })
+        const $trashbuskets = document.querySelectorAll('.folder-trash');
+        const $list = document.querySelector('[data-type="list"]');
+
+        if (event.target.textContent === "Delete folder") {
+            $trashbuskets.forEach(busket => {
+                busket.style.display = "block";
+            })
+            if ($list.children.length > 0) {
+                event.target.textContent = "Cancel";
+            }
+        } else {
+            $trashbuskets.forEach(busket => {
+                busket.style.display = "none";
+            })
+            event.target.textContent = "Delete folder";
+        }
     }
 
     // Click on trash busket of folder for deleting it
     if (event.target.dataset.type === "delete-current-folder-btn") {
         const trashbuskets = document.querySelectorAll('.folder-trash');
+        const deleteFolderBtn = document.querySelector('[data-type="delete-folder-btn"]')
+        deleteFolderBtn.textContent = "Delete folder";
         trashbuskets.forEach(busket => {
             busket.style.display = "none";
         })
@@ -121,7 +135,7 @@ document.addEventListener('click', (event) => {
 
 function folderDeletingConfirmation(event) {
     if (event.target.dataset.type === "confirmDeleting") {
-        deleteFolderAndTasksFromLocalStorage(event.target.id);
+        deleteFolderAndTasksFromLocalStorage(event.target.parentNode.parentNode.id);
         deleteFolder(folderLi);
         closeDialog();
     }
