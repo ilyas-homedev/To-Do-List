@@ -1,5 +1,5 @@
 import { createNewFolderName, nameValidation, addToFoldersList, highlightTheFolder, deleteFolder } from './create-folder.js';
-import { addEmptyInputField, saveTask, deleteTask, taskDone} from './tasks.js';
+import { addEmptyInputField, saveTask, deleteTask, taskDone, clearDefaultInputFields} from './tasks.js';
 import { saveFolderToLocalStorage, getFoldersFromLocalStorage, getTasksFromLocalStorage, saveTaskDoneToLocalStorage, renderAllTasksFromLocalStorage, checkIsFolderEmptyFromLocalStorage, deleteFolderAndTasksFromLocalStorage } from './local-storage.js';
 
 // variables
@@ -111,8 +111,12 @@ document.addEventListener('click', (event) => {
         const deleteBtn = li.querySelector('[data-type="delete"]');
 
         if (input.value.length > 0) {
-            deleteTask(li);
-            console.log('Deleted.');
+            if (event.target.parentNode.dataset.type === "default-task-container") {
+                clearDefaultInputFields();
+            } else {
+                deleteTask(li);
+                console.log('Deleted.');
+            }
         } else {
             deleteBtn.disabled;
             console.log("Nothing to delete");

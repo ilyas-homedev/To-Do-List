@@ -6,6 +6,7 @@ const $defaultTaskContainer = document.querySelector('[data-type="default-task-c
 const $title = document.querySelector('[data-type="folderTitle"]');
 const $prompt = document.querySelector('.task-fill-prompt');
 const $taskList = document.querySelector('[data-type="task-list"]');
+const $deleteFolderBtn = document.querySelector('[data-type="delete-folder-btn"]');
 
 export function createNewFolderName() {
     const html = `
@@ -47,6 +48,7 @@ export function addToFoldersList(folderName) {
     li.classList.add("folder");
     li.innerHTML = `<i class="far fa-folder"></i> ${folderName}<button data-type="delete-current-folder-btn" class="folder-trash"><i class="far fa-trash-alt"></i></button>`
     $list.appendChild(li);
+    $deleteFolderBtn.disabled = false;
 }
 
 export function highlightTheFolder(event) {
@@ -63,4 +65,11 @@ export function deleteFolder(li) {
     $defaultTaskContainer.classList.remove("open-default-task-container");
     $title.textContent = "";
     $prompt.style.display = "none";
+    FolderListEmpty();
+}
+
+function FolderListEmpty() {
+    if ($list.children.length === 0) {
+        $deleteFolderBtn.disabled = true;
+    }
 }

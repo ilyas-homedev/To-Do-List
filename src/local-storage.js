@@ -41,13 +41,24 @@ export function getTasksFromLocalStorage(folderName) {
     const tasksArr = tasks.map(taskObj => {
         let isDoneClass = "";
         let isForTodayClass = "";
-        
+
+        const currentDate = new Date();
+        const currentDay = currentDate.getDate();
+        const currentMonth = currentDate.getMonth() + 1;
+        const currentYear = currentDate.getFullYear();
+        let currentDateString;
+        if (currentMonth.toString().length === 1) {
+            currentDateString = `${currentYear}-0${currentMonth}-${currentDay}`;
+        } else {
+            currentDateString = `${currentYear}-${currentMonth}-${currentDay}`;
+        }
+        if (currentDateString === taskObj.date) {
+            isForTodayClass = "todays-task";
+        }    
         if (taskObj.isDone) {
             isDoneClass = "task-done";
         }
-        if (taskObj.isForToday) {
-            isForTodayClass = "todays-class";
-        }
+
         return `
             <li id="${taskObj.id}" data-type="task" class="task ${isForTodayClass} ${isDoneClass}">
                 <button data-type="checkbox" class="task-buttons checkbox"><i class="fas fa-check"></i></button>
@@ -55,6 +66,7 @@ export function getTasksFromLocalStorage(folderName) {
                 <input type="date" class="task-date saved-task" value="${taskObj.date}" disabled>
                 <input type="time" class="task-time saved-task" value="${taskObj.time}" disabled>
                 <button data-type="delete" class="task-buttons delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
+                <span class="today-label">today</span>
             </li>
         `;
     })
@@ -120,7 +132,8 @@ export function renderAllTasksFromLocalStorage() {
                     <input type="text" placeholder="Task" class="task-description saved-task" value="${taskObj.description}" disabled>
                     <input type="date" class="task-date saved-task" value="${taskObj.date}" disabled>
                     <input type="time" class="task-time saved-task" value="${taskObj.time}" disabled>
-                    <button data-type="delete" class="task-buttons delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>   
+                    <button data-type="delete" class="task-buttons delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
+                    <span class="today-label">today</span>
                 </li>
             `;
         })

@@ -38,7 +38,7 @@ header {
 }
 
 header button {
-    padding: 5px;
+    padding: 5px 10px;
     margin: 10px 20px;
 }
 
@@ -123,7 +123,7 @@ header button {
 .list {
     list-style-type: none;
     padding: 0;
-    margin-bottom: 10px;
+    margin: 10px 0;
     max-height: 450px;
     overflow: scroll;
 }
@@ -167,6 +167,12 @@ header button {
     margin: 20px 0;
 }
 
+.delete-folder-btn:disabled {
+    border-color: #ccc;
+    background-color: #fff;
+    cursor: unset;
+}
+
 /* tasks */
 .task {
     width: 97%;
@@ -175,16 +181,19 @@ header button {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    position: relative;
 }
 
-.task.todays-task input {
-    border-top-color: var(--action-color);
-    border-top-width: 2px;
-    border-bottom-width: 2px;
-    border-bottom-color: var(--action-color);
+.today-label {
+    position: absolute;
+    right: 175px;
+    font-family: RobotoItalic;
+    color: var(--action-color);
+    display: none;
 }
-.task.todays-task input[type="time"] {
-    border-right-color: var(--action-color);
+
+.task.todays-task .today-label {
+    display: block;
 }
 
 .task.task-done .checkbox {
@@ -295,7 +304,7 @@ header button {
 
 .task-description, .task-date, .task-time {
     border-left: none;
-    background-color: #eee;
+    background-color: #E5EEC1;
 }
 
 .task-date, .task-time {

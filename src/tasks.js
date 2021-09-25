@@ -1,6 +1,9 @@
 import { saveTaskToLocalStorage, deleteTaskFromLocalStorage } from './local-storage.js';
 
 const $defaultTaskContainer = document.querySelector('[data-type="default-task-container"]');
+const $defaultDescription = $defaultTaskContainer.querySelector('[data-type="default-task-input"]');
+const $defaultData = $defaultTaskContainer.querySelector('[type="date"]');
+const $defaultTime = $defaultTaskContainer.querySelector('[type="time"]');
 const $title = document.querySelector('[data-type="folderTitle"]');
 const $prompt = document.querySelector('.task-fill-prompt');
 const $list = document.querySelector('[data-type="task-list"]');
@@ -19,7 +22,18 @@ export function addToTaskList(taskObj) {
     li.dataset.type = "task";
     li.classList.add("task");
 
-    if (taskObj.isForToday) {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDate();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+    let currentDateString;
+    if (currentMonth.toString().length === 1) {
+        currentDateString = `${currentYear}-0${currentMonth}-${currentDay}`;
+    } else {
+        currentDateString = `${currentYear}-${currentMonth}-${currentDay}`;
+    }
+
+    if (currentDateString === taskObj.date) {
         li.classList.add('todays-task');
     }
     if (taskObj.isDone) {
@@ -30,7 +44,8 @@ export function addToTaskList(taskObj) {
                     <input type="text" placeholder="Task" class="task-description saved-task" value="${taskObj.description}" disabled>
                     <input type="date" class="task-date saved-task" value="${taskObj.date}" disabled>
                     <input type="time" class="task-time saved-task" value="${taskObj.time}" disabled>   
-                    <button data-type="delete" class="task-buttons delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>`;
+                    <button data-type="delete" class="task-buttons delete-task-btn delete-btn"><i class="far fa-trash-alt"></i></button>
+                    <span class="today-label">today</span>`;
 
     $list.appendChild(li);
 }
@@ -46,10 +61,9 @@ export function saveTask(folderName, li) {
     const newTask = {
         id: id,
         description: description.value,
-        date: date.value,
+        date: handleDate(date.value),
         time: time.value,
         isDone: false,
-        isForToday: false,
     }
 
     saveTaskToLocalStorage(newTask);
@@ -73,59 +87,30 @@ export function taskDone(li) {
     }
 }
 
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-export function checkDateAndTime(task) {
+export function handleDate(value) {
     const currentDate = new Date();
     const currentDay = currentDate.getDate();
-    const currentMonth = currentDate.getMonth();
+    const currentMonth = currentDate.getMonth() + 1;
     const currentYear = currentDate.getFullYear();
-    let currentDateString = `${currentYear}-${currentMonth}-${currentDay}`;
-    let currentTimeString = '00:00';
+    let currentDateString;
+    let dateOfTask;
 
-    let taskDatePlug = '';
     if (currentMonth.toString().length === 1) {
-        taskDatePlug = `${currentYear}-0${currentMonth}-${currentDay}`;
+        currentDateString = `${currentYear}-0${currentMonth}-${currentDay}`;
     } else {
-        taskDatePlug = `${currentYear}-${currentMonth}-${currentDay}`;
+        currentDateString = `${currentYear}-${currentMonth}-${currentDay}`;
     }
 
-    let date = '';
-    let time = '';
-    
-
-    if (task.date) {
-        date = task.date;
+    if (value) {
+        dateOfTask = value;
     } else {
-        date = currentDateString;
-        task.date = taskDatePlug;
+        dateOfTask = currentDateString;
     }
-    if (task.time) {
-        time = task.time;
-    } else {
-        time = currentTimeString
-    }
+    return dateOfTask
+}
 
-    const monthArr = date.split('-')[1].split('');
-    let monthIndex = null;
-    if (monthArr[0] === '0') {
-        monthIndex = +monthArr[1];
-    } else {
-        monthIndex = +monthArr.join('');
-    }
-
-    const day = date.split('-')[2];
-    const year = date.split('-')[0];
-    
-    const dateString = `${day} ${months[monthIndex]} ${year} ${time}:00 GMT`;
-    const shortDateString = `${year}-${monthIndex}-${day}`;
-
-    const dateAndTime = Date.parse(dateString);
-    // console.log(currentDate.getTime());
-
-    if (shortDateString === currentDateString) {
-        return 'todays-task';
-    }
-
-    return '';
+export function clearDefaultInputFields() {
+    $defaultDescription.value = "";
+    $defaultData.value = "";
+    $defaultTime.value = "";
 }
