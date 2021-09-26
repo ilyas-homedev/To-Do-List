@@ -62,7 +62,7 @@ export function saveTask(folderName, li) {
         id: id,
         description: description.value,
         date: handleDate(date.value),
-        time: time.value,
+        time: handleTime(time.value),
         isDone: false,
     }
 
@@ -87,7 +87,7 @@ export function taskDone(li) {
     }
 }
 
-export function handleDate(value) {
+function handleDate(value) {
     const currentDate = new Date();
     const currentDay = currentDate.getDate();
     const currentMonth = currentDate.getMonth() + 1;
@@ -107,6 +107,16 @@ export function handleDate(value) {
         dateOfTask = currentDateString;
     }
     return dateOfTask
+}
+
+function handleTime(value) {
+    let timeOfTask;
+    if (value) {
+        timeOfTask = value;
+    } else {
+        timeOfTask = '00:00';
+    }
+    return timeOfTask;
 }
 
 export function clearDefaultInputFields() {

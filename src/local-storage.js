@@ -119,11 +119,21 @@ export function renderAllTasksFromLocalStorage() {
             let isDoneClass = "";
             let isForTodayClass = "";
             
+            const currentDate = new Date();
+            const currentDay = currentDate.getDate();
+            const currentMonth = currentDate.getMonth() + 1;
+            const currentYear = currentDate.getFullYear();
+            let currentDateString;
+            if (currentMonth.toString().length === 1) {
+                currentDateString = `${currentYear}-0${currentMonth}-${currentDay}`;
+            } else {
+                currentDateString = `${currentYear}-${currentMonth}-${currentDay}`;
+            }
+            if (currentDateString === taskObj.date) {
+                isForTodayClass = "todays-task";
+            }    
             if (taskObj.isDone) {
                 isDoneClass = "task-done";
-            }
-            if (taskObj.isForToday) {
-                isForTodayClass = "todays-class";
             }
 
             return `

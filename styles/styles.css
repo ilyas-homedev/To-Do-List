@@ -196,6 +196,10 @@ header button {
     display: block;
 }
 
+.task.task-done .today-label {
+    color: #ccc;
+}
+
 .task.task-done .checkbox {
     background-color: var(--folders);
     color: #fff;
